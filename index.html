@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KDMC PPT Maker - Auto Background</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Khand:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #eef2f3; 
+            margin: 0; 
+            padding: 20px; 
+            text-align: center; 
+        }
+        .admin-panel { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            display: inline-block; 
+            margin-bottom: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            width: 90%; 
+            max-width: 600px;
+        }
+        
+        /* Slide Container - HD Resolution Setup */
+        .slide {
+            width: 960px; height: 540px;
+            background: url('background.jpg') no-repeat center center / cover;
+            border: 1px solid #cbd5e1;
+            position: relative;
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            padding: 35px 50px;
+            box-sizing: border-box;
+            text-align: left;
+        }
+
+        /* Typography */
+        .kdmc-header {
+            font-family: 'Khand', sans-serif;
+            font-size: 38px;
+            font-weight: 700;
+            color: #1e3a8a;
+            border-bottom: 3px solid #1e3a8a;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .main-title {
+            font-family: 'Khand', sans-serif;
+            font-size: 32px;
+            color: #dc2626;
+            font-weight: 600;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        /* Information Grid */
+        .slide-form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 25px;
+            width: 100%;
+        }
+        
+        .form-group {
+            display: flex;
+            align-items: baseline;
+            font-size: 17px;
+            color: #334155;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            width: 170px;
+            flex-shrink: 0;
+        }
+        
+        .form-group span {
+            border-bottom: 1px solid #cbd5e1;
+            flex-grow: 1;
+            padding: 0 5px;
+            outline: none;
+            color: #0f172a;
+            white-space: nowrap;
+        }
+
+        /* Image Slide Styling */
+        .image-wrapper {
+            display: flex; 
+            width: 100%; 
+            height: 100%;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        .img-box {
+            flex: 1; 
+            height: 85%;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background: #f8fafc;
+            overflow: hidden;
+        }
+        .img-box img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: fill;
+            display: block;
+        }
+
+        /* UI Elements */
+        button { 
+            padding: 10px 24px; 
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            border-radius: 6px; 
+            border: none; 
+            margin: 5px; 
+            transition: 0.3s; 
+        }
+        .btn-generate { background: #2563eb; color: white; }
+        .btn-download { background: #059669; color: white; }
+        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        input[type="file"] { margin: 8px 0; font-size: 14px; }
+        label { font-size: 14px; color: #64748b; }
+    </style>
+</head>
+<body>
+
+<div class="admin-panel">
+    <h2 style="margin-top:0; font-family: 'Khand'; color: #1e293b; font-size: 28px;">KDMC नालेसफाई रिपोर्ट मेकर</h2>
+    <div style="text-align: left; padding: 0 20px;">
+        <label><strong>कामाचे फोटो निवडा (फोटो निवडल्यावर स्लाईड्स आपोआप बनतील):</strong></label><br>
+        <input type="file" id="multiImageInput" accept="image/*" multiple>
+    </div>
+    <div style="border-top: 1px solid #eee; margin-top: 15px; padding-top: 10px;">
+        <button class="btn-generate" onclick="generateAllSlides()">स्लाईड्स पुन्हा बनवा</button>
+        <button class="btn-download" onclick="downloadAsPDF()">PDF डाऊनलोड करा</button>
+    </div>
+</div>
+
+<div id="allSlidesContainer">
+    <div id="slide-0" class="slide">
+        <div class="kdmc-header">कल्याण डोंबिवली महानगरपालिका</div>
+        
+        <div class="main-title" contenteditable="true">नालेसफाई पूर्ण / Pre-Monsoon Work Completed</div>
+        
+        <div class="slide-form-container">
+            <div class="form-group">
+                <label>हजेरी शेड:</label>
+                <span contenteditable="true">__________________</span>
+            </div>
+            <div class="form-group">
+                <label>ठिकाण:</label>
+                <span contenteditable="true">__________________</span>
+            </div>
+            <div class="form-group">
+                <label>दिनांक:</label>
+                <span contenteditable="true">___/05/2026</span>
+            </div>
+            <div class="form-group">
+                <label>वेळ:</label>
+                <span contenteditable="true">____________</span>
+            </div>
+            <div class="form-group" style="grid-column: span 2;">
+                <label>व्याप्ती (येथून - तेथून):</label>
+                <span contenteditable="true">_________ पासून _________ पर्यंत</span>
+            </div>
+            <div class="form-group">
+                <label>एकूण सफाई लांबी:</label>
+                <span contenteditable="true">_____ मीटर</span>
+            </div>
+            <div class="form-group">
+                <label>प्रत्यक्ष सफाई लांबी:</label>
+                <span contenteditable="true">_____ मीटर</span>
+            </div>
+            <div class="form-group">
+                <label>काढलेला गाळ:</label>
+                <span contenteditable="true">_____ घनमीटर</span>
+            </div>
+            <div class="form-group">
+                <label>सफाई कर्मचारी:</label>
+                <span contenteditable="true">__________________</span>
+            </div>
+            <div class="form-group">
+                <label>मुकादम:</label>
+                <span contenteditable="true">__________________</span>
+            </div>
+            <div class="form-group">
+                <label>स्वच्छता निरीक्षक:</label>
+                <span contenteditable="true">__________________</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Automatic Generation Feature
+    document.getElementById('multiImageInput').addEventListener('change', function() {
+        if (this.files.length > 0) {
+            generateAllSlides();
+        }
+    });
+
+    async function generateAllSlides() {
+        const container = document.getElementById('allSlidesContainer');
+        const imageFiles = document.getElementById('multiImageInput').files;
+        
+        if (imageFiles.length === 0) {
+            alert("कृपया कामाचे फोटो निवडा!");
+            return;
+        }
+
+        const introSlide = document.getElementById('slide-0');
+        container.innerHTML = "";
+        container.appendChild(introSlide);
+
+        // Add Image Slides (2 images per slide)
+        for (let i = 0; i < imageFiles.length; i += 2) {
+            const slideDiv = document.createElement('div');
+            slideDiv.className = 'slide';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'image-wrapper';
+
+            const b1 = await makeImgBox(imageFiles[i]);
+            wrapper.appendChild(b1);
+
+            if (imageFiles[i+1]) {
+                const b2 = await makeImgBox(imageFiles[i+1]);
+                wrapper.appendChild(b2);
+            }
+
+            slideDiv.appendChild(wrapper);
+            container.appendChild(slideDiv);
+        }
+    }
+
+    function makeImgBox(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const box = document.createElement('div');
+                box.className = 'img-box';
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                box.appendChild(img);
+                resolve(box);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Append Thank You slide at the end
+    function appendThankYouSlide() {
+        const existing = document.getElementById('slide-thankyou');
+        if (existing) existing.remove();
+
+        const tySlide = document.createElement('div');
+        tySlide.id = 'slide-thankyou';
+        tySlide.className = 'slide';
+        
+        tySlide.style.cssText = "display: flex; justify-content: center; align-items: center; flex-direction: column; text-align: center;";
+        tySlide.innerHTML = `
+            <div style="font-family: 'Khand', sans-serif; font-size: 85px; color: #1e3a8a; text-transform: uppercase; margin-bottom: 15px; font-weight: 700;">धन्यवाद</div>
+            <div style="font-family: 'Poppins', sans-serif; font-size: 26px; color: #334155; font-weight: 600; margin-bottom: 5px;">कल्याण डोंबिवली महानगरपालिका</div>
+            <div style="font-family: 'Poppins', sans-serif; font-size: 16px; color: #64748b;">नालेसफाई व पूर्व-पावसाळी कामे</div>
+        `;
+        document.getElementById('allSlidesContainer').appendChild(tySlide);
+    }
+
+    async function downloadAsPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'px', [960, 540]);
+        
+        // Add Thank You slide before saving to PDF
+        appendThankYouSlide();
+
+        const slides = document.querySelectorAll('.slide');
+
+        for (let i = 0; i < slides.length; i++) {
+            const canvas = await html2canvas(slides[i], { 
+                scale: 3, // High scale factor for HD clarity
+                useCORS: true,
+                logging: false,
+                width: 960,
+                height: 540
+            });
+            
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            if (i > 0) doc.addPage();
+            doc.addImage(imgData, 'JPEG', 0, 0, 960, 540);
+        }
+        
+        // Remove the thank you slide from DOM after capturing the canvas
+        const ty = document.getElementById('slide-thankyou');
+        if(ty) ty.remove();
+
+        doc.save("Nala_Cleaning_Report.pdf");
+    }
+</script>
+
+</body>
+</html>
